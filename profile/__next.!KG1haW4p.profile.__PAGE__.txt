@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-3:I[97367,["/LifeFlow/_next/static/chunks/01xlw8hd842-c.js","/LifeFlow/_next/static/chunks/0dde2u_epq.e2.js","/LifeFlow/_next/static/chunks/0n4z.7yu76je-.js"],"OutletBoundary"]
+3:I[97367,["/LifeFlow/_next/static/chunks/01xlw8hd842-c.js","/LifeFlow/_next/static/chunks/12dew~a-r8-18.js","/LifeFlow/_next/static/chunks/0n4z.7yu76je-.js"],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":["$L2",null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"oTUwxonPHyF1VQpJ0rX8j"}
+0:{"rsc":["$","$1","c",{"children":["$L2",null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"t6iPiv9W_mRZxb8Ldz0nk"}
 5:null
 2:E{"digest":"NEXT_REDIRECT;replace;/perfil;307;"}
