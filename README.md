@@ -112,7 +112,9 @@ No Firebase Console:
 1. Ative autenticação por Email/Password.
 2. Ative autenticação por Google se quiser usar login com Google.
 3. Crie um banco Firestore.
-4. Copie os dados de configuração do app web para o `.env.local`.
+4. Publique as regras de `firebase/firestore.rules`.
+5. Em Authentication > Settings > Authorized domains, adicione `localhost` e `brenoch.github.io`.
+6. Copie os dados de configuração do app web para o `.env.local`.
 
 ## Coleções do Firestore
 
@@ -143,6 +145,24 @@ A interface é mobile-first e pode ser empacotada depois com Capacitor ou outro 
 O projeto já vem preparado para publicar no GitHub Pages com export estático.
 
 1. Crie um repositório no GitHub e envie o código para `main`.
-2. Ative GitHub Pages com fonte `GitHub Actions`.
-3. O workflow usa a base do repositório como caminho, então o site sai em algo como `https://seu-usuario.github.io/nome-do-repositorio/`.
-4. As rotas em português continuam funcionando no Pages, como `/entrar/`, `/cadastro/`, `/calendario/`, `/estudos/` e `/perfil/`.
+2. Ative GitHub Pages com fonte `Deploy from a branch`.
+3. Escolha a branch `gh-pages` e a pasta `/(root)`.
+4. O workflow usa a base do repositório como caminho, então o site sai em algo como `https://seu-usuario.github.io/nome-do-repositorio/`.
+5. As rotas em português continuam funcionando no Pages, como `/entrar/`, `/cadastro/`, `/calendario/`, `/estudos/` e `/perfil/`.
+
+### Firebase no GitHub Pages
+
+Para usar a mesma conta em outros dispositivos, o build do GitHub Pages precisa receber as variáveis públicas do Firebase. No GitHub, vá em `Settings > Secrets and variables > Actions > Variables` e crie:
+
+```text
+NEXT_PUBLIC_FIREBASE_API_KEY
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+NEXT_PUBLIC_FIREBASE_PROJECT_ID
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID
+```
+
+Depois faça um novo push para `main`. O workflow vai gerar o site com Firebase Auth e Firestore ativos.
+
+No Firebase Console, adicione `brenoch.github.io` em `Authentication > Settings > Authorized domains` e publique as regras em `firebase/firestore.rules`.

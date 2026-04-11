@@ -74,6 +74,8 @@ export function PremiumDashboard() {
     todaySummary,
     suggestedTopic,
     badges,
+    storageMode,
+    syncError,
     addRoutineItem,
     setActivityStatus,
     completeStudySession,
@@ -137,7 +139,11 @@ export function PremiumDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        action={<Badge tone="violet">Modo premium · demo local</Badge>}
+        action={
+          <Badge tone={syncError ? "error" : storageMode === "firebase" ? "success" : "violet"}>
+            {syncError ? "Sincronização pendente" : storageMode === "firebase" ? "Firestore ativo" : "Modo local"}
+          </Badge>
+        }
         description="Rotina, foco e estudo em uma visão calma para decidir a próxima ação sem ruído."
         eyebrow="Painel"
         title={`Bom te ver, ${data.profile.name}`}

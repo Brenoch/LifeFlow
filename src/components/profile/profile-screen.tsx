@@ -19,6 +19,7 @@ export function ProfileScreen() {
     badges,
     storageMode,
     isFirebaseEnabled,
+    syncError,
     updateProfileName,
     removeRoutineItem,
     logout,
@@ -81,6 +82,12 @@ export function ProfileScreen() {
               <span className="text-[#aeb7c2]">Configuração do Firebase</span>
               <span className={cn("font-semibold", isFirebaseEnabled ? "text-emerald-200" : "text-amber-200")}>
                 {isFirebaseEnabled ? "Ativa" : "Variáveis ausentes"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-3 text-sm">
+              <span className="text-[#aeb7c2]">Sincronização</span>
+              <span className={cn("text-right font-semibold", syncError ? "text-rose-200" : "text-emerald-200")}>
+                {syncError ?? (storageMode === "firebase" ? "Firestore ativo" : "Somente neste navegador")}
               </span>
             </div>
           </div>

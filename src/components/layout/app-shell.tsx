@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--text)]">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-[var(--border)] bg-[#11141d]/92 px-5 py-6 backdrop-blur-xl lg:flex lg:flex-col">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-[var(--border)] bg-[#11141d]/92 px-5 py-6 backdrop-blur-xl lg:flex lg:flex-col">
         <Link className="flex min-w-0 items-center gap-3" href="/">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-white shadow-[0_14px_34px_rgba(139,92,246,0.28)]">
             LF
@@ -119,7 +119,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 pb-24 pt-5 sm:px-6 lg:ml-72 lg:max-w-none lg:px-8 lg:pb-10 lg:pt-8">
+      <div className="min-h-screen w-full lg:pl-64">
+        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 pb-24 pt-5 sm:px-6 lg:px-8 lg:pb-10 lg:pt-8">
         <header className="mb-6 flex items-center justify-between gap-4 lg:hidden">
           <Link className="flex min-w-0 items-center gap-3" href="/">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-white">
@@ -139,7 +140,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main className="min-w-0 flex-1">{children}</main>
+        </div>
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[#11141d]/95 px-2 py-2 backdrop-blur-xl lg:hidden">

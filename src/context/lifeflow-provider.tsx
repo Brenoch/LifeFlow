@@ -76,6 +76,7 @@ interface LifeFlowContextValue {
   isReady: boolean;
   isFirebaseEnabled: boolean;
   storageMode: StorageMode;
+  syncError: string | null;
   levelInfo: ReturnType<typeof getLevelInfo>;
   streak: number;
   todaySummary: ReturnType<typeof getDailySummary> | null;
@@ -103,6 +104,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
   const [storageMode, setStorageMode] = useState<StorageMode>(
     isFirebaseConfigured ? "firebase" : "local",
   );
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   const dataRef = useRef<LifeFlowData | null>(null);
   const storageModeRef = useRef<StorageMode>(storageMode);
@@ -118,6 +120,8 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (firebaseAuth && firebaseDb) {
       return onAuthStateChanged(firebaseAuth, async (user) => {
+        setSyncError(null);
+
         if (!user) {
           dataRef.current = null;
           setData(null);
@@ -126,11 +130,21 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
         }
 
         setIsReady(false);
-        const loadedData = await loadRemoteData(user);
-        dataRef.current = loadedData;
-        setStorageMode("firebase");
-        setData(loadedData);
-        setIsReady(true);
+        try {
+          const loadedData = await loadRemoteData(user);
+          dataRef.current = loadedData;
+          setStorageMode("firebase");
+          setData(loadedData);
+        } catch (error) {
+          console.error("Erro ao carregar dados do Firebase", error);
+          dataRef.current = null;
+          setData(null);
+          setSyncError(
+            "Não foi possível carregar seus dados do Firebase. Confira as regras do Firestore e as variáveis do projeto.",
+          );
+        } finally {
+          setIsReady(true);
+        }
       });
     }
 
@@ -150,7 +164,13 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
   const persistData = useCallback(async (nextData: LifeFlowData) => {
     if (storageModeRef.current === "firebase") {
-      await saveRemoteData(nextData);
+      try {
+        await saveRemoteData(nextData);
+        setSyncError(null);
+      } catch (error) {
+        console.error("Erro ao salvar dados no Firebase", error);
+        setSyncError("Não foi possível salvar no Firebase. Verifique sua conexão e permissões.");
+      }
       return;
     }
 
@@ -408,6 +428,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
       isReady,
       isFirebaseEnabled: isFirebaseConfigured,
       storageMode,
+      syncError,
       levelInfo,
       streak: data ? calculateCurrentStreak(data) : 0,
       todaySummary: data ? getDailySummary(data, toDateKey()) : null,
@@ -440,6 +461,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
     removeStudyTopic,
     setActivityStatus,
     storageMode,
+    syncError,
     updateProfileName,
     updateStudyTopic,
   ]);
@@ -535,7 +557,11 @@ async function deleteRemoteDocument(collectionName: string, id: string) {
     return;
   }
 
-  await deleteDoc(doc(db, collectionName, id));
+  try {
+    await deleteDoc(doc(db, collectionName, id));
+  } catch (error) {
+    console.error("Erro ao remover documento remoto", error);
+  }
 }
 
 function storageUnavailableInClient() {
