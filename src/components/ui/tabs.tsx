@@ -27,7 +27,7 @@ export function Tabs<T extends string>({
   return (
     <div
       className={cn(
-        "grid rounded-lg border border-[var(--border)] bg-[#111520] p-1",
+        "grid min-w-0 overflow-hidden rounded-lg border border-[var(--border)] bg-[#111520] p-1",
         className,
       )}
       style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
@@ -38,7 +38,7 @@ export function Tabs<T extends string>({
         return (
           <button
             className={cn(
-              "premium-focus relative min-h-10 rounded-lg px-3 text-xs font-bold text-[var(--muted)] transition sm:text-sm",
+              "premium-focus relative min-h-10 min-w-0 rounded-lg px-2 text-xs font-bold text-[var(--muted)] transition sm:px-3 sm:text-sm",
               active && "text-white",
             )}
             key={option.value}
@@ -52,7 +52,7 @@ export function Tabs<T extends string>({
                 transition={{ duration: 0.22, ease: "easeOut" }}
               />
             ) : null}
-            <span className="relative z-10 inline-flex items-center justify-center gap-2">
+            <span className="relative z-10 inline-flex max-w-full items-center justify-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap sm:gap-2">
               {option.icon}
               {option.label}
             </span>

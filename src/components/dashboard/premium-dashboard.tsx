@@ -137,7 +137,7 @@ export function PremiumDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6 overflow-hidden">
       <PageHeader
         action={
           <Badge tone={syncError ? "error" : storageMode === "firebase" ? "success" : "violet"}>
@@ -149,40 +149,63 @@ export function PremiumDashboard() {
         title={`Bom te ver, ${data.profile.name}`}
       />
 
-      <section className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
+      <section className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1fr)_360px]">
         <motion.article
-          className="relative min-h-[360px] overflow-hidden rounded-lg border border-[var(--border)]"
+          className="card relative min-w-0 overflow-hidden p-5 sm:p-6"
           initial={{ opacity: 0, y: 14 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <Image
-            alt="Mesa organizada para uma sessão de estudo focada"
-            className="object-cover"
-            fill
-            priority
-            sizes="(min-width: 1280px) 58vw, 100vw"
-            src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1400&q=80"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0f1117_0%,rgba(15,17,23,0.88)_42%,rgba(15,17,23,0.22)_100%)]" />
-          <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8">
-            <Badge className="mb-4 w-fit" tone="violet">
-              Próxima ação
-            </Badge>
-            <div className="max-w-xl space-y-3">
-              <h2 className="text-3xl font-black tracking-tight sm:text-5xl">
-                Um dia disciplinado começa por uma decisão pequena.
-              </h2>
-              <p className="text-sm leading-6 text-slate-200 sm:text-base">
-                {todaySummary.completed} de {todaySummary.scheduled} tarefas concluídas hoje.
-                Mantenha o plano leve, visível e possível.
-              </p>
+          <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_220px] md:items-stretch">
+            <div className="min-w-0 space-y-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge tone="violet">Hoje</Badge>
+                <Badge tone={todaySummary.percentage === 100 ? "success" : "default"}>
+                  {todaySummary.completed}/{todaySummary.scheduled || 0} concluídas
+                </Badge>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
+                  Complete a próxima ação sem perder o ritmo.
+                </h2>
+                <p className="max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                  O painel prioriza o que importa agora: rotina do dia, estudo sugerido,
+                  sequência e progresso real.
+                </p>
+              </div>
+              <ProgressBar label="Progresso diário" tone="violet" value={todaySummary.percentage} />
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
+                  <p className="text-xs text-[var(--muted)]">Planejadas</p>
+                  <p className="mt-1 text-2xl font-black">{todaySummary.scheduled}</p>
+                </div>
+                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
+                  <p className="text-xs text-[var(--muted)]">Feitas</p>
+                  <p className="mt-1 text-2xl font-black">{todaySummary.completed}</p>
+                </div>
+                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
+                  <p className="text-xs text-[var(--muted)]">Sequência</p>
+                  <p className="mt-1 text-2xl font-black">{streak}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative hidden min-h-56 overflow-hidden rounded-lg border border-[var(--border)] md:block">
+              <Image
+                alt="Mesa organizada para uma sessão de estudo focada"
+                className="object-cover"
+                fill
+                priority
+                sizes="220px"
+                src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=700&q=80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1117]/80 via-transparent to-transparent" />
             </div>
           </div>
         </motion.article>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2 2xl:grid-cols-1">
           <StatCard
             helper="Conclusão planejada para hoje"
             icon={<CheckCircle2 className="h-5 w-5" />}
@@ -215,7 +238,7 @@ export function PremiumDashboard() {
       </section>
 
       <Tabs
-        className="lg:max-w-3xl"
+        className="w-full lg:max-w-3xl"
         onValueChange={setActiveTab}
         options={dashboardTabs}
         value={activeTab}
@@ -298,11 +321,11 @@ function RoutinePanel({
   return (
     <motion.section
       animate={{ opacity: 1, y: 0 }}
-      className="grid gap-4 xl:grid-cols-[1fr_0.82fr]"
+      className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]"
       initial={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="p-4 sm:p-5">
+      <Card className="min-w-0 p-4 sm:p-5">
         <CardHeader className="mb-4 flex flex-row items-start justify-between gap-4 space-y-0">
           <div>
             <CardTitle>Tarefas de hoje</CardTitle>
@@ -356,7 +379,7 @@ function RoutinePanel({
         </div>
       </Card>
 
-      <Card className="p-4 sm:p-5">
+      <Card className="min-w-0 p-4 sm:p-5">
         <CardHeader>
           <CardTitle>Adicionar rotina</CardTitle>
           <CardDescription>Escolha os dias em que ela entra no plano semanal.</CardDescription>
@@ -418,11 +441,11 @@ function StudiesPanel({
   return (
     <motion.section
       animate={{ opacity: 1, y: 0 }}
-      className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]"
+      className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]"
       initial={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="p-5">
+      <Card className="min-w-0 p-5">
         <CardHeader>
           <CardTitle>Sugestão inteligente</CardTitle>
           <CardDescription>Prioridade baseada em espaçamento, dificuldade e carga recente.</CardDescription>
@@ -446,7 +469,7 @@ function StudiesPanel({
         )}
       </Card>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2">
         <StatCard
           helper="Últimos 7 dias"
           icon={<BookOpenCheck className="h-5 w-5" />}
@@ -486,11 +509,11 @@ function AnalyticsPanel({
   return (
     <motion.section
       animate={{ opacity: 1, y: 0 }}
-      className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]"
+      className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"
       initial={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="p-4 sm:p-5">
+      <Card className="min-w-0 overflow-hidden p-4 sm:p-5">
         <CardHeader>
           <CardTitle>Performance semanal</CardTitle>
           <CardDescription>Conclusão diária das tarefas planejadas.</CardDescription>
@@ -527,8 +550,8 @@ function AnalyticsPanel({
         </div>
       </Card>
 
-      <div className="grid gap-4">
-        <Card className="p-4 sm:p-5">
+      <div className="grid min-w-0 gap-4">
+        <Card className="min-w-0 overflow-hidden p-4 sm:p-5">
           <CardHeader>
             <CardTitle>Foco recente</CardTitle>
             <CardDescription>Minutos por sessão concluída.</CardDescription>
@@ -552,7 +575,7 @@ function AnalyticsPanel({
             </ResponsiveContainer>
           </div>
         </Card>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
           <StatCard helper="Últimos 7 dias" label="Treinos" tone="green" value={weeklyWorkoutCount} />
           <StatCard helper="Últimos 7 dias" label="Estudo" tone="cyan" value={`${weeklyStudyMinutes}m`} />
         </div>
@@ -575,11 +598,11 @@ function ProfilePanel({
   return (
     <motion.section
       animate={{ opacity: 1, y: 0 }}
-      className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]"
+      className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
       initial={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.25 }}
     >
-      <Card className="p-5">
+      <Card className="min-w-0 p-5">
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>Nível, XP e conquistas atuais.</CardDescription>
@@ -593,7 +616,7 @@ function ProfilePanel({
         </div>
       </Card>
 
-      <Card className="p-5">
+      <Card className="min-w-0 p-5">
         <CardHeader>
           <CardTitle>Conquistas</CardTitle>
           <CardDescription>Pequenos marcos que reforçam consistência.</CardDescription>

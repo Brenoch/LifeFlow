@@ -32,16 +32,16 @@ const iconTones = {
 export function StatCard({ label, value, helper, tone = "green", icon }: StatCardProps) {
   return (
     <motion.article
-      className={cn("card p-4 transition duration-200 hover:-translate-y-0.5", tones[tone])}
+      className={cn("card min-w-0 p-4 transition duration-200 hover:-translate-y-0.5", tones[tone])}
       initial={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.28, ease: "easeOut" }}
       viewport={{ once: true, margin: "-40px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-xs font-semibold uppercase text-[var(--muted)]">{label}</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-[var(--text)]">{value}</p>
+          <p className="mt-2 break-words text-3xl font-black tracking-tight text-[var(--text)]">{value}</p>
         </div>
         {icon ? (
           <span className={cn("grid h-10 w-10 place-items-center rounded-lg", iconTones[tone])}>
