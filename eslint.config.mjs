@@ -15,6 +15,7 @@ const eslintConfig = defineConfig([
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
+    ".gh-pages/**",
     "build/**",
     "lifeflow-tmp/**",
     "next-env.d.ts",

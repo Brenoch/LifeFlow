@@ -62,11 +62,11 @@ export function AuthPanel({ mode }: AuthPanelProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#101113] px-4 py-6 text-[#f4f7fb]">
+    <main className="min-h-screen bg-[var(--background)] px-4 py-6 text-[var(--text)]">
       <div className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-5xl content-center gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <section className="space-y-6">
           <div className="space-y-3">
-            <span className="inline-flex rounded-md bg-[#39d98a] px-3 py-1 text-xs font-bold uppercase tracking-normal text-[#101113]">
+            <span className="inline-flex rounded-lg bg-[var(--primary)] px-3 py-1 text-xs font-bold uppercase tracking-normal text-white">
               LifeFlow
             </span>
             <div className="space-y-2">
@@ -79,7 +79,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             </div>
           </div>
 
-          <div className="relative h-56 overflow-hidden rounded-md border border-[#2b2f36] sm:h-72">
+          <div className="relative h-56 overflow-hidden rounded-lg border border-[var(--border)] sm:h-72">
             <Image
               alt="Pessoa se preparando para uma sessão de treino focada"
               className="object-cover"
@@ -141,7 +141,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             </label>
 
             {error ? (
-              <p className="rounded-md border border-[#4a2b2d] bg-[#2a1719] px-3 py-2 text-sm text-[#ff9b91]">
+              <p className="rounded-lg border border-rose-300/20 bg-rose-400/12 px-3 py-2 text-sm text-rose-100">
                 {error}
               </p>
             ) : null}
@@ -164,7 +164,7 @@ export function AuthPanel({ mode }: AuthPanelProps) {
             <p className="text-center text-sm text-[#aeb7c2]">
               {mode === "register" ? "Já tem uma conta?" : "Novo por aqui?"}{" "}
               <Link
-                className="font-semibold text-[#39d98a]"
+                className="font-semibold text-violet-200"
                 href={mode === "register" ? "/entrar" : "/cadastro"}
               >
                 {mode === "register" ? "Entrar" : "Criar uma conta"}

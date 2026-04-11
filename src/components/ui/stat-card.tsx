@@ -1,23 +1,55 @@
+"use client";
+
+import { motion } from "framer-motion";
+import type { ReactNode } from "react";
+
+import { cn } from "@/lib/cn";
+
 interface StatCardProps {
   label: string;
   value: string | number;
   helper?: string;
-  tone?: "green" | "cyan" | "coral" | "gold";
+  tone?: "green" | "cyan" | "coral" | "gold" | "violet";
+  icon?: ReactNode;
 }
 
 const tones = {
-  green: "border-[#39d98a]/35",
-  cyan: "border-[#38c7ff]/35",
-  coral: "border-[#ff6f61]/35",
-  gold: "border-[#f7c948]/35",
+  green: "border-emerald-300/20 bg-emerald-400/[0.035]",
+  cyan: "border-sky-300/20 bg-sky-400/[0.035]",
+  coral: "border-rose-300/20 bg-rose-400/[0.035]",
+  gold: "border-amber-300/20 bg-amber-400/[0.035]",
+  violet: "border-violet-300/24 bg-violet-400/[0.045]",
 };
 
-export function StatCard({ label, value, helper, tone = "green" }: StatCardProps) {
+const iconTones = {
+  green: "bg-emerald-400/12 text-emerald-200",
+  cyan: "bg-sky-400/12 text-sky-200",
+  coral: "bg-rose-400/12 text-rose-200",
+  gold: "bg-amber-400/12 text-amber-200",
+  violet: "bg-violet-400/14 text-violet-100",
+};
+
+export function StatCard({ label, value, helper, tone = "green", icon }: StatCardProps) {
   return (
-    <article className={`card ${tones[tone]} p-4`}>
-      <p className="text-xs text-[#aeb7c2]">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-[#f4f7fb]">{value}</p>
-      {helper ? <p className="mt-1 text-xs text-[#7e8896]">{helper}</p> : null}
-    </article>
+    <motion.article
+      className={cn("card p-4 transition duration-200 hover:-translate-y-0.5", tones[tone])}
+      initial={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-40px" }}
+      whileInView={{ opacity: 1, y: 0 }}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase text-[var(--muted)]">{label}</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-[var(--text)]">{value}</p>
+        </div>
+        {icon ? (
+          <span className={cn("grid h-10 w-10 place-items-center rounded-lg", iconTones[tone])}>
+            {icon}
+          </span>
+        ) : null}
+      </div>
+      {helper ? <p className="mt-2 text-xs leading-5 text-[var(--quiet)]">{helper}</p> : null}
+    </motion.article>
   );
 }

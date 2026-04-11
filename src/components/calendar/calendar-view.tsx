@@ -15,10 +15,10 @@ import { cn } from "@/lib/cn";
 import { useLifeFlow } from "@/hooks/use-lifeflow";
 
 const statusClasses = {
-  complete: "border-[#39d98a] bg-[#173021] text-[#dfffee]",
-  partial: "border-[#f7c948] bg-[#302914] text-[#fff4bd]",
-  missed: "border-[#ff6f61] bg-[#341d1a] text-[#ffd7d2]",
-  rest: "border-[#2b2f36] bg-[#111317] text-[#7e8896]",
+  complete: "border-emerald-300/25 bg-emerald-400/12 text-emerald-100",
+  partial: "border-amber-300/25 bg-amber-400/12 text-amber-100",
+  missed: "border-rose-300/25 bg-rose-400/12 text-rose-100",
+  rest: "border-[var(--border)] bg-white/[0.03] text-[var(--quiet)]",
 };
 
 export function CalendarView() {
@@ -78,10 +78,10 @@ export function CalendarView() {
               return (
                 <button
                   className={cn(
-                    "aspect-square rounded-md border p-1 text-left text-xs transition",
+                    "aspect-square rounded-lg border p-1 text-left text-xs transition hover:-translate-y-0.5",
                     statusClasses[summary.status],
                     !isCurrentMonth && "opacity-40",
-                    isSelected && "ring-2 ring-[#38c7ff]",
+                    isSelected && "ring-2 ring-violet-300/70",
                   )}
                   key={dateKey}
                   onClick={() => setSelectedDate(dateKey)}
@@ -119,7 +119,7 @@ export function CalendarView() {
                 const isDone = activity?.completed ?? false;
 
                 return (
-                  <div className="rounded-md border border-[#2b2f36] bg-[#111317] p-3" key={item.id}>
+                  <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3" key={item.id}>
                     <div className="mb-3">
                       <p className="font-semibold">{item.title}</p>
                       <p className="text-xs capitalize text-[#aeb7c2]">
@@ -127,7 +127,7 @@ export function CalendarView() {
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <Button
+                    <Button
                         onClick={() => setActivityStatus(item.id, true, selectedDate)}
                         variant={isDone ? "primary" : "secondary"}
                       >
@@ -144,16 +144,16 @@ export function CalendarView() {
                 );
               })
             ) : (
-              <p className="rounded-md border border-dashed border-[#2b2f36] p-4 text-sm text-[#aeb7c2]">
+              <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
                 Nenhuma atividade de rotina agendada para este dia.
               </p>
             )}
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-2 text-xs text-[#aeb7c2]">
-            <span className="chip border-[#39d98a]/40">Completo</span>
-            <span className="chip border-[#f7c948]/40">Parcial</span>
-            <span className="chip border-[#ff6f61]/40">Perdido</span>
+            <span className="chip border-emerald-300/30">Completo</span>
+            <span className="chip border-amber-300/30">Parcial</span>
+            <span className="chip border-rose-300/30">Perdido</span>
             <span className="chip">Descanso</span>
           </div>
         </aside>

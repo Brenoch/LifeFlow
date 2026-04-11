@@ -100,7 +100,7 @@ export function PomodoroScreen() {
       <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <article className="card p-5 sm:p-6">
           <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-            <div className="grid aspect-square w-full max-w-[280px] place-items-center rounded-md border border-[#2b2f36] bg-[#111317]">
+            <div className="grid aspect-square w-full max-w-[280px] place-items-center rounded-lg border border-violet-300/20 bg-violet-400/10">
               <div>
                 <p className="text-6xl font-black tabular-nums">{formatSeconds(secondsLeft)}</p>
                 <p className="mt-2 text-sm text-[#aeb7c2]">
@@ -156,7 +156,7 @@ export function PomodoroScreen() {
             </select>
 
             {selectedTopic ? (
-              <div className="mt-4 rounded-md border border-[#2b2f36] bg-[#111317] p-3">
+              <div className="mt-4 rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
                 <p className="font-semibold">{selectedTopic.title}</p>
                 <p className="text-sm capitalize text-[#aeb7c2]">
                   {difficultyLabels[selectedTopic.difficulty]} · {selectedTopic.estimatedMinutes} min ·{" "}
@@ -174,7 +174,7 @@ export function PomodoroScreen() {
             <div className="grid grid-cols-4 gap-2">
               {durationOptions.map((minutes) => (
                 <button
-                  className={`chip ${durationMinutes === minutes ? "border-[#38c7ff] bg-[#123040] text-[#dbf7ff]" : ""}`}
+                  className={`chip ${durationMinutes === minutes ? "border-violet-300/40 bg-violet-400/14 text-violet-100" : ""}`}
                   disabled={isRunning}
                   key={minutes}
                   onClick={() => updateDuration(minutes)}
@@ -191,7 +191,7 @@ export function PomodoroScreen() {
             <div className="space-y-2">
               {data.pomodoroSessions.slice(-5).reverse().map((session) => (
                 <div
-                  className="flex items-center justify-between gap-3 rounded-md border border-[#2b2f36] bg-[#111317] p-3 text-sm"
+                  className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-white/[0.03] p-3 text-sm"
                   key={session.id}
                 >
                   <span className="truncate">{session.topicTitle}</span>
@@ -199,7 +199,7 @@ export function PomodoroScreen() {
                 </div>
               ))}
               {data.pomodoroSessions.length === 0 ? (
-                <p className="rounded-md border border-dashed border-[#2b2f36] p-4 text-sm text-[#aeb7c2]">
+                <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
                   Nenhuma sessão de foco ainda.
                 </p>
               ) : null}

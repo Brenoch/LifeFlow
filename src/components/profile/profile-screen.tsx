@@ -72,14 +72,14 @@ export function ProfileScreen() {
             </Button>
           </form>
 
-          <div className="mt-5 space-y-3 rounded-md border border-[#2b2f36] bg-[#111317] p-3">
+          <div className="mt-5 space-y-3 rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
             <div className="flex items-center justify-between gap-3 text-sm">
               <span className="text-[#aeb7c2]">Armazenamento</span>
               <span className="font-semibold">{storageModeLabels[storageMode]}</span>
             </div>
             <div className="flex items-center justify-between gap-3 text-sm">
               <span className="text-[#aeb7c2]">Configuração do Firebase</span>
-              <span className={cn("font-semibold", isFirebaseEnabled ? "text-[#39d98a]" : "text-[#f7c948]")}>
+              <span className={cn("font-semibold", isFirebaseEnabled ? "text-emerald-200" : "text-amber-200")}>
                 {isFirebaseEnabled ? "Ativa" : "Variáveis ausentes"}
               </span>
             </div>
@@ -103,10 +103,10 @@ export function ProfileScreen() {
               {badges.map((badge) => (
                 <div
                   className={cn(
-                    "rounded-md border p-3",
+                    "rounded-lg border p-3",
                     badge.earned
-                      ? "border-[#39d98a]/50 bg-[#173021] text-[#dfffee]"
-                      : "border-[#2b2f36] bg-[#111317] text-[#aeb7c2]",
+                      ? "border-violet-300/28 bg-violet-400/12 text-white"
+                      : "border-[var(--border)] bg-white/[0.03] text-[var(--muted)]",
                   )}
                   key={badge.id}
                 >
@@ -128,7 +128,7 @@ export function ProfileScreen() {
         <div className="grid gap-3">
           {data.routineItems.map((item) => (
             <div
-              className="rounded-md border border-[#2b2f36] bg-[#111317] p-3"
+              className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3"
               key={item.id}
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -143,7 +143,7 @@ export function ProfileScreen() {
                         className={cn(
                           "chip min-w-10",
                           item.weekdays.includes(index)
-                            ? "border-[#39d98a] bg-[#163021] text-[#dfffee]"
+                            ? "border-violet-300/40 bg-violet-400/14 text-violet-100"
                             : "opacity-45",
                         )}
                         key={label}
@@ -160,7 +160,7 @@ export function ProfileScreen() {
             </div>
           ))}
           {data.routineItems.length === 0 ? (
-            <p className="rounded-md border border-dashed border-[#2b2f36] p-4 text-sm text-[#aeb7c2]">
+            <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
               Nenhuma atividade de rotina ainda.
             </p>
           ) : null}

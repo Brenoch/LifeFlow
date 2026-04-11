@@ -153,7 +153,7 @@ export function StudyPlanner() {
           </div>
 
           {suggestedTopic ? (
-            <div className="rounded-md border border-[#2b2f36] bg-[#111317] p-4">
+            <div className="rounded-lg border border-violet-300/20 bg-violet-400/10 p-4">
               <p className="text-2xl font-bold">{suggestedTopic.title}</p>
               <p className="mt-2 text-sm text-[#aeb7c2]">
                 {suggestedTopic.estimatedMinutes} min ·{" "}
@@ -169,7 +169,7 @@ export function StudyPlanner() {
               </Button>
             </div>
           ) : (
-            <p className="rounded-md border border-dashed border-[#2b2f36] p-4 text-sm text-[#aeb7c2]">
+            <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
               Adicione um tópico para receber uma sugestão de estudo.
             </p>
           )}
@@ -186,7 +186,7 @@ export function StudyPlanner() {
           {data.studyTopics.length > 0 ? (
             data.studyTopics.map((topic) => (
               <div
-                className="rounded-md border border-[#2b2f36] bg-[#111317] p-3"
+                className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3"
                 key={topic.id}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -215,7 +215,7 @@ export function StudyPlanner() {
               </div>
             ))
           ) : (
-            <p className="rounded-md border border-dashed border-[#2b2f36] p-4 text-sm text-[#aeb7c2]">
+            <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
               Nenhum tópico ainda.
             </p>
           )}
