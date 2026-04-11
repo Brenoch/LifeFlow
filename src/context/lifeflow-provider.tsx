@@ -108,6 +108,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
   const dataRef = useRef<LifeFlowData | null>(null);
   const storageModeRef = useRef<StorageMode>(storageMode);
+  const authActionInProgressRef = useRef(false);
 
   useEffect(() => {
     dataRef.current = data;
@@ -117,9 +118,40 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
     storageModeRef.current = storageMode;
   }, [storageMode]);
 
+  const applyRemoteUserData = useCallback(async (user: User, preferredName?: string) => {
+    setIsReady(false);
+    setSyncError(null);
+
+    try {
+      const loadedData = await loadRemoteData(user, preferredName);
+      dataRef.current = loadedData;
+      storageModeRef.current = "firebase";
+      setStorageMode("firebase");
+      setData(loadedData);
+      return loadedData;
+    } catch (error) {
+      console.error("Erro ao carregar dados do Firebase", error);
+      const profile = createRemoteProfile(user, preferredName);
+      const fallbackData = createDefaultData(profile);
+
+      dataRef.current = fallbackData;
+      storageModeRef.current = "firebase";
+      setStorageMode("firebase");
+      setData(fallbackData);
+      setSyncError(getFirebaseDataErrorMessage(error));
+      return fallbackData;
+    } finally {
+      setIsReady(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (firebaseAuth && firebaseDb) {
       return onAuthStateChanged(firebaseAuth, async (user) => {
+        if (authActionInProgressRef.current) {
+          return;
+        }
+
         setSyncError(null);
 
         if (!user) {
@@ -129,22 +161,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        setIsReady(false);
-        try {
-          const loadedData = await loadRemoteData(user);
-          dataRef.current = loadedData;
-          setStorageMode("firebase");
-          setData(loadedData);
-        } catch (error) {
-          console.error("Erro ao carregar dados do Firebase", error);
-          dataRef.current = null;
-          setData(null);
-          setSyncError(
-            "Não foi possível carregar seus dados do Firebase. Confira as regras do Firestore e as variáveis do projeto.",
-          );
-        } finally {
-          setIsReady(true);
-        }
+        await applyRemoteUserData(user);
       });
     }
 
@@ -160,7 +177,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
     setStorageMode("local");
     setIsReady(true);
-  }, []);
+  }, [applyRemoteUserData]);
 
   const persistData = useCallback(async (nextData: LifeFlowData) => {
     if (storageModeRef.current === "firebase") {
@@ -196,42 +213,64 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     if (firebaseAuth) {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      authActionInProgressRef.current = true;
+      try {
+        const credential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+        await applyRemoteUserData(credential.user);
+      } finally {
+        authActionInProgressRef.current = false;
+      }
       return;
     }
 
     const profile = createProfile(email.split("@")[0] || "Usuário LifeFlow", email, localUserId(email));
     const nextData = loadLocalData(profile.id) ?? createDefaultData(profile);
     dataRef.current = nextData;
+    storageModeRef.current = "local";
     setStorageMode("local");
+    setSyncError(null);
     setData(nextData);
     saveLocalSession(nextData.profile);
     saveLocalData(nextData);
-  }, []);
+  }, [applyRemoteUserData]);
 
   const register = useCallback(async (name: string, email: string, password: string) => {
     if (firebaseAuth) {
-      const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      await updateFirebaseProfile(credential.user, { displayName: name });
+      authActionInProgressRef.current = true;
+      try {
+        const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+        await updateFirebaseProfile(credential.user, { displayName: name });
+        await applyRemoteUserData(credential.user, name);
+      } finally {
+        authActionInProgressRef.current = false;
+      }
       return;
     }
 
     const profile = createProfile(name, email, localUserId(email));
     const nextData = createDefaultData(profile);
     dataRef.current = nextData;
+    storageModeRef.current = "local";
     setStorageMode("local");
+    setSyncError(null);
     setData(nextData);
     saveLocalSession(profile);
     saveLocalData(nextData);
-  }, []);
+  }, [applyRemoteUserData]);
 
   const loginWithGoogle = useCallback(async () => {
     if (!firebaseAuth || !googleProvider) {
       throw new Error("O login com Google precisa das variáveis de ambiente do Firebase.");
     }
 
-    await signInWithPopup(firebaseAuth, googleProvider);
-  }, []);
+    authActionInProgressRef.current = true;
+    try {
+      const credential = await signInWithPopup(firebaseAuth, googleProvider);
+      await applyRemoteUserData(credential.user);
+    } finally {
+      authActionInProgressRef.current = false;
+    }
+  }, [applyRemoteUserData]);
 
   const logout = useCallback(async () => {
     if (firebaseAuth) {
@@ -473,7 +512,32 @@ function localUserId(email: string) {
   return `local-${email.trim().toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
 }
 
-async function loadRemoteData(user: User): Promise<LifeFlowData> {
+function createRemoteProfile(user: User, preferredName?: string) {
+  return createProfile(
+    preferredName ?? user.displayName ?? user.email?.split("@")[0] ?? "Usuário LifeFlow",
+    user.email ?? "",
+    user.uid,
+  );
+}
+
+function getFirebaseDataErrorMessage(error: unknown) {
+  const code =
+    typeof error === "object" && error && "code" in error
+      ? String((error as { code?: unknown }).code)
+      : "";
+
+  if (code.includes("permission-denied")) {
+    return "Login feito, mas o Firestore bloqueou seus dados. Confira se as regras foram publicadas e se o banco é Firestore.";
+  }
+
+  if (code.includes("unavailable")) {
+    return "Login feito, mas o Firestore está indisponível agora. Seus dados ficam na tela e serão salvos quando a conexão permitir.";
+  }
+
+  return "Login feito, mas não foi possível sincronizar com o Firestore. Confira as regras, o projeto Firebase e o console do navegador.";
+}
+
+async function loadRemoteData(user: User, preferredName?: string): Promise<LifeFlowData> {
   const db = firebaseDb;
 
   if (!db) {
@@ -483,7 +547,7 @@ async function loadRemoteData(user: User): Promise<LifeFlowData> {
   const profileSnapshot = await getDoc(doc(db, "users", user.uid));
   const profile = profileSnapshot.exists()
     ? (profileSnapshot.data() as LifeFlowData["profile"])
-    : createProfile(user.displayName ?? user.email?.split("@")[0] ?? "Usuário LifeFlow", user.email ?? "", user.uid);
+    : createRemoteProfile(user, preferredName);
 
   const [routineItems, activities, studyTopics, pomodoroSessions] = await Promise.all([
     loadRemoteCollection<RoutineItem>("routine_items", user.uid),
