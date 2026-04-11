@@ -119,6 +119,32 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
   }, [storageMode]);
 
   const applyRemoteUserData = useCallback(async (user: User, preferredName?: string) => {
+    const cachedData = loadLocalData(user.uid);
+
+    if (cachedData) {
+      dataRef.current = cachedData;
+      storageModeRef.current = "firebase";
+      setStorageMode("firebase");
+      setData(cachedData);
+      setIsReady(true);
+      setSyncError(null);
+
+      void loadRemoteData(user, preferredName)
+        .then((loadedData) => {
+          dataRef.current = loadedData;
+          setData(loadedData);
+          saveLocalSession(loadedData.profile);
+          saveLocalData(loadedData);
+          setSyncError(null);
+        })
+        .catch((error) => {
+          console.error("Erro ao atualizar cache com dados do Firebase", error);
+          setSyncError(getFirebaseDataErrorMessage(error));
+        });
+
+      return cachedData;
+    }
+
     setIsReady(false);
     setSyncError(null);
 
@@ -128,6 +154,8 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
       storageModeRef.current = "firebase";
       setStorageMode("firebase");
       setData(loadedData);
+      saveLocalSession(loadedData.profile);
+      saveLocalData(loadedData);
       return loadedData;
     } catch (error) {
       console.error("Erro ao carregar dados do Firebase", error);
@@ -181,6 +209,9 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
   const persistData = useCallback(async (nextData: LifeFlowData) => {
     if (storageModeRef.current === "firebase") {
+      saveLocalSession(nextData.profile);
+      saveLocalData(nextData);
+
       try {
         await saveRemoteData(nextData);
         setSyncError(null);
@@ -240,7 +271,23 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
       try {
         const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
         await updateFirebaseProfile(credential.user, { displayName: name });
-        await applyRemoteUserData(credential.user, name);
+        const nextData = createDefaultData(createRemoteProfile(credential.user, name));
+
+        dataRef.current = nextData;
+        storageModeRef.current = "firebase";
+        setStorageMode("firebase");
+        setSyncError(null);
+        setData(nextData);
+        setIsReady(true);
+        saveLocalSession(nextData.profile);
+        saveLocalData(nextData);
+
+        void saveRemoteData(nextData)
+          .then(() => setSyncError(null))
+          .catch((error) => {
+            console.error("Erro ao criar dados iniciais no Firebase", error);
+            setSyncError(getFirebaseDataErrorMessage(error));
+          });
       } finally {
         authActionInProgressRef.current = false;
       }
@@ -256,7 +303,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
     setData(nextData);
     saveLocalSession(profile);
     saveLocalData(nextData);
-  }, [applyRemoteUserData]);
+  }, []);
 
   const loginWithGoogle = useCallback(async () => {
     if (!firebaseAuth || !googleProvider) {
@@ -566,7 +613,9 @@ async function loadRemoteData(user: User, preferredName?: string): Promise<LifeF
 
   if (routineItems.length === 0 && studyTopics.length === 0) {
     const seededData = createDefaultData(profile);
-    await saveRemoteData(seededData);
+    void saveRemoteData(seededData).catch((error) => {
+      console.error("Erro ao salvar dados iniciais no Firebase", error);
+    });
     return seededData;
   }
 
