@@ -112,7 +112,7 @@ export function ProfileScreen() {
                   className={cn(
                     "rounded-lg border p-3",
                     badge.earned
-                      ? "border-violet-300/28 bg-violet-400/12 text-white"
+                      ? "border-[color-mix(in_srgb,var(--primary)_35%,transparent)] bg-[var(--primary-soft)] text-[var(--text)]"
                       : "border-[var(--border)] bg-white/[0.03] text-[var(--muted)]",
                   )}
                   key={badge.id}
@@ -150,7 +150,7 @@ export function ProfileScreen() {
                         className={cn(
                           "chip min-w-10",
                           item.weekdays.includes(index)
-                            ? "border-violet-300/40 bg-violet-400/14 text-violet-100"
+                            ? "border-[color-mix(in_srgb,var(--primary)_40%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]"
                             : "opacity-45",
                         )}
                         key={label}

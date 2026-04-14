@@ -10,9 +10,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "border-transparent bg-[var(--primary)] text-white shadow-[0_14px_32px_rgba(139,92,246,0.28)] hover:bg-[var(--primary-strong)]",
+          "border-transparent bg-[var(--primary)] text-[var(--text-inverse)] shadow-[0_14px_30px_rgba(244,239,95,0.2)] hover:bg-[var(--primary-strong)]",
         secondary:
-          "border-[var(--border)] bg-[#1a1e2a] text-[var(--text)] hover:border-[var(--border-strong)] hover:bg-[#202638]",
+          "border-[var(--border)] bg-white/[0.055] text-[var(--text)] hover:border-[var(--border-strong)] hover:bg-white/[0.09]",
         ghost:
           "border-transparent bg-transparent text-[var(--muted)] hover:bg-white/[0.06] hover:text-[var(--text)]",
         danger:
@@ -20,7 +20,7 @@ const buttonVariants = cva(
         success:
           "border-emerald-300/20 bg-emerald-400/14 text-emerald-100 hover:bg-emerald-400/20",
         outline:
-          "border-[var(--border)] bg-transparent text-[var(--text)] hover:border-violet-300/35 hover:bg-violet-400/10",
+          "border-[var(--border)] bg-transparent text-[var(--text)] hover:border-sky-300/35 hover:bg-sky-400/10",
       },
       size: {
         default: "min-h-11 px-4 py-2.5",

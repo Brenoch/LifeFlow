@@ -14,7 +14,6 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { FormEvent, useMemo, useState } from "react";
 import {
   Area,
@@ -140,7 +139,7 @@ export function PremiumDashboard() {
     <div className="min-w-0 space-y-6 overflow-hidden">
       <PageHeader
         action={
-          <Badge tone={syncError ? "error" : storageMode === "firebase" ? "success" : "violet"}>
+          <Badge tone={syncError ? "error" : storageMode === "firebase" ? "success" : "warning"}>
             {syncError ? "Sincronização pendente" : storageMode === "firebase" ? "Firestore ativo" : "Modo local"}
           </Badge>
         }
@@ -151,56 +150,73 @@ export function PremiumDashboard() {
 
       <section className="grid min-w-0 gap-4 2xl:grid-cols-[minmax(0,1fr)_360px]">
         <motion.article
-          className="card relative min-w-0 overflow-hidden p-5 sm:p-6"
+          className="card relative min-w-0 overflow-hidden p-0"
           initial={{ opacity: 0, y: 14 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_220px] md:items-stretch">
-            <div className="min-w-0 space-y-5">
+          <div className="grid min-w-0 md:grid-cols-[minmax(0,0.95fr)_minmax(260px,0.62fr)]">
+            <div className="min-w-0 p-5 sm:p-6">
+              <div className="habit-thread mb-5 rounded-lg border border-white/10 bg-[#111214]">
+                <div className="absolute bottom-5 left-5">
+                  <p className="text-sm font-black text-[var(--quiet)]">track</p>
+                  <p className="text-3xl font-black tracking-normal text-[var(--text)]">seu ritmo.</p>
+                </div>
+                <span className="absolute left-10 top-12 h-2 w-2 rounded-full bg-[var(--paper)]" />
+                <span className="absolute right-16 top-20 h-2 w-2 rounded-full border border-[var(--paper)]" />
+              </div>
+
               <div className="flex flex-wrap items-center gap-2">
-                <Badge tone="violet">Hoje</Badge>
+                <Badge tone="warning">Hoje</Badge>
                 <Badge tone={todaySummary.percentage === 100 ? "success" : "default"}>
                   {todaySummary.completed}/{todaySummary.scheduled || 0} concluídas
                 </Badge>
               </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl">
-                  Complete a próxima ação sem perder o ritmo.
+              <div className="mt-5 space-y-2">
+                <h2 className="text-2xl font-black tracking-normal sm:text-3xl lg:text-4xl">
+                  Uma rotina limpa, visual e impossível de ignorar.
                 </h2>
                 <p className="max-w-2xl text-sm leading-6 text-[var(--muted)]">
-                  O painel prioriza o que importa agora: rotina do dia, estudo sugerido,
-                  sequência e progresso real.
+                  Hábitos, estudos e foco reunidos em cartões rápidos, com progresso claro e sugestões leves.
                 </p>
               </div>
-              <ProgressBar label="Progresso diário" tone="violet" value={todaySummary.percentage} />
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
-                  <p className="text-xs text-[var(--muted)]">Planejadas</p>
-                  <p className="mt-1 text-2xl font-black">{todaySummary.scheduled}</p>
-                </div>
-                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
-                  <p className="text-xs text-[var(--muted)]">Feitas</p>
-                  <p className="mt-1 text-2xl font-black">{todaySummary.completed}</p>
-                </div>
-                <div className="rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
-                  <p className="text-xs text-[var(--muted)]">Sequência</p>
-                  <p className="mt-1 text-2xl font-black">{streak}</p>
-                </div>
+              <div className="mt-5">
+                <ProgressBar label="Progresso diário" tone="gold" value={todaySummary.percentage} />
               </div>
             </div>
 
-            <div className="relative hidden min-h-56 overflow-hidden rounded-lg border border-[var(--border)] md:block">
-              <Image
-                alt="Mesa organizada para uma sessão de estudo focada"
-                className="object-cover"
-                fill
-                priority
-                sizes="220px"
-                src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=700&q=80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1117]/80 via-transparent to-transparent" />
+            <div className="card-light m-4 grid min-h-72 content-between overflow-hidden p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-black uppercase text-[#626977]">Semana</p>
+                <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#17191d] text-sm text-[var(--paper)]">
+                  +
+                </span>
+              </div>
+              <div className="space-y-5">
+                {[
+                  ["sono 8h", todaySummary.percentage >= 30],
+                  ["estudo", todaySummary.percentage >= 60],
+                  ["treino", todaySummary.percentage === 100],
+                ].map(([label, active]) => (
+                  <div key={String(label)}>
+                    <p className="mb-2 text-xl font-black">{label}</p>
+                    <div className="flex gap-2">
+                      {[10, 11, 12, 13, 14, 15].map((day, index) => (
+                        <span
+                          className={cn(
+                            "timeline-dot grid place-items-center text-xs font-black",
+                            (active || index < todaySummary.completed) && "is-active",
+                          )}
+                          key={day}
+                        >
+                          {day}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.article>
@@ -210,7 +226,7 @@ export function PremiumDashboard() {
             helper="Conclusão planejada para hoje"
             icon={<CheckCircle2 className="h-5 w-5" />}
             label="Progresso"
-            tone="violet"
+            tone="gold"
             value={`${todaySummary.percentage}%`}
           />
           <StatCard
@@ -331,10 +347,10 @@ function RoutinePanel({
             <CardTitle>Tarefas de hoje</CardTitle>
             <CardDescription>Feito ou não feito. O plano fica honesto e fácil de ler.</CardDescription>
           </div>
-          <Badge tone="violet">{todaySummary.percentage}%</Badge>
+          <Badge tone="warning">{todaySummary.percentage}%</Badge>
         </CardHeader>
 
-        <ProgressBar label="Conclusão diária" tone="violet" value={todaySummary.percentage} />
+        <ProgressBar label="Conclusão diária" tone="gold" value={todaySummary.percentage} />
 
         <div className="mt-5 grid gap-3">
           {scheduledItems.length > 0 ? (
@@ -406,8 +422,8 @@ function RoutinePanel({
             {weekdayShortLabels.map((label, index) => (
               <button
                 className={cn(
-                  "chip premium-focus transition hover:border-violet-300/35 hover:text-white",
-                  weekdays.includes(index) && "border-violet-300/40 bg-violet-400/14 text-violet-100",
+                  "chip premium-focus transition hover:border-[color-mix(in_srgb,var(--primary)_35%,transparent)] hover:text-white",
+                  weekdays.includes(index) && "border-[color-mix(in_srgb,var(--primary)_40%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]",
                 )}
                 key={label}
                 onClick={() => toggleWeekday(index)}
@@ -451,9 +467,9 @@ function StudiesPanel({
           <CardDescription>Prioridade baseada em espaçamento, dificuldade e carga recente.</CardDescription>
         </CardHeader>
         {suggestedTopic ? (
-          <div className="mt-5 rounded-lg border border-violet-300/20 bg-violet-400/10 p-4">
-            <Badge tone="violet">{difficultyLabels[suggestedTopic.difficulty]}</Badge>
-            <p className="mt-4 text-3xl font-black tracking-tight">{suggestedTopic.title}</p>
+          <div className="mt-5 rounded-lg border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] bg-[var(--primary-soft)] p-4">
+            <Badge tone="warning">{difficultyLabels[suggestedTopic.difficulty]}</Badge>
+            <p className="mt-4 text-3xl font-black tracking-normal">{suggestedTopic.title}</p>
             <p className="mt-2 text-sm text-[var(--muted)]">{suggestedTopic.estimatedMinutes} minutos</p>
             <Button
               className="mt-5 w-full"
@@ -481,7 +497,7 @@ function StudiesPanel({
           helper="Pomodoros finalizados"
           icon={<TimerReset className="h-5 w-5" />}
           label="Sessões"
-          tone="violet"
+          tone="gold"
           value={sessions}
         />
       </div>
@@ -523,8 +539,8 @@ function AnalyticsPanel({
             <AreaChart data={weeklyProgress}>
               <defs>
                 <linearGradient id="progressGradient" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.45} />
-                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.02} />
+                  <stop offset="5%" stopColor="#43dce7" stopOpacity={0.42} />
+                  <stop offset="95%" stopColor="#43dce7" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke="rgba(148,163,184,0.12)" vertical={false} />
@@ -541,7 +557,7 @@ function AnalyticsPanel({
               <Area
                 dataKey="percentual"
                 fill="url(#progressGradient)"
-                stroke="#8b5cf6"
+                stroke="#43dce7"
                 strokeWidth={3}
                 type="monotone"
               />
@@ -608,9 +624,9 @@ function ProfilePanel({
           <CardDescription>Nível, XP e conquistas atuais.</CardDescription>
         </CardHeader>
         <div className="mt-5 space-y-4">
-          <ProgressBar label={`Nível ${levelInfo.level}`} tone="violet" value={levelInfo.progress} />
+          <ProgressBar label={`Nível ${levelInfo.level}`} tone="gold" value={levelInfo.progress} />
           <div className="grid grid-cols-2 gap-3">
-            <StatCard helper="Total acumulado" label="XP" tone="violet" value={xp} />
+            <StatCard helper="Total acumulado" label="XP" tone="gold" value={xp} />
             <StatCard helper="Para o próximo nível" label="Faltam" tone="gold" value={levelInfo.xpToNextLevel} />
           </div>
         </div>
@@ -627,13 +643,13 @@ function ProfilePanel({
               className={cn(
                 "rounded-lg border p-4 transition",
                 badge.earned
-                  ? "border-violet-300/28 bg-violet-400/12 text-white"
+                  ? "border-[color-mix(in_srgb,var(--primary)_35%,transparent)] bg-[var(--primary-soft)] text-white"
                   : "border-[var(--border)] bg-white/[0.025] text-[var(--muted)]",
               )}
               key={badge.id}
             >
               <div className="mb-3 flex items-center gap-2">
-                <Award className={cn("h-4 w-4", badge.earned ? "text-violet-200" : "text-[var(--quiet)]")} />
+                <Award className={cn("h-4 w-4", badge.earned ? "text-[var(--primary)]" : "text-[var(--quiet)]")} />
                 <p className="font-bold">{badge.title}</p>
               </div>
               <p className="text-xs leading-5">{badge.description}</p>

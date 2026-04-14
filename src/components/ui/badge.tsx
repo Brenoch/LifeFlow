@@ -7,10 +7,10 @@ type BadgeTone = "default" | "success" | "warning" | "error" | "info" | "violet"
 const tones: Record<BadgeTone, string> = {
   default: "border-[var(--border)] bg-white/[0.04] text-[var(--muted)]",
   success: "border-emerald-300/20 bg-emerald-400/12 text-emerald-100",
-  warning: "border-amber-300/20 bg-amber-400/12 text-amber-100",
+  warning: "border-amber-300/25 bg-[var(--primary-soft)] text-[var(--primary)]",
   error: "border-rose-300/20 bg-rose-400/12 text-rose-100",
   info: "border-sky-300/20 bg-sky-400/12 text-sky-100",
-  violet: "border-violet-300/24 bg-violet-400/14 text-violet-100",
+  violet: "border-violet-300/24 bg-[color-mix(in_srgb,var(--accent)_18%,transparent)] text-violet-100",
 };
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

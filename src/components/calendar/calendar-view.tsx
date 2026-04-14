@@ -15,10 +15,10 @@ import { cn } from "@/lib/cn";
 import { useLifeFlow } from "@/hooks/use-lifeflow";
 
 const statusClasses = {
-  complete: "border-emerald-300/25 bg-emerald-400/12 text-emerald-100",
-  partial: "border-amber-300/25 bg-amber-400/12 text-amber-100",
+  complete: "border-emerald-300/25 bg-emerald-400/14 text-emerald-100",
+  partial: "border-[color-mix(in_srgb,var(--primary)_35%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]",
   missed: "border-rose-300/25 bg-rose-400/12 text-rose-100",
-  rest: "border-[var(--border)] bg-white/[0.03] text-[var(--quiet)]",
+  rest: "border-[var(--border)] bg-white/[0.04] text-[var(--quiet)]",
 };
 
 export function CalendarView() {
@@ -81,7 +81,7 @@ export function CalendarView() {
                     "aspect-square rounded-lg border p-1 text-left text-xs transition hover:-translate-y-0.5",
                     statusClasses[summary.status],
                     !isCurrentMonth && "opacity-40",
-                    isSelected && "ring-2 ring-violet-300/70",
+                    isSelected && "ring-2 ring-[var(--primary)]",
                   )}
                   key={dateKey}
                   onClick={() => setSelectedDate(dateKey)}

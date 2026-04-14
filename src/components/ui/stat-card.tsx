@@ -14,11 +14,11 @@ interface StatCardProps {
 }
 
 const tones = {
-  green: "border-emerald-300/20 bg-emerald-400/[0.035]",
-  cyan: "border-sky-300/20 bg-sky-400/[0.035]",
-  coral: "border-rose-300/20 bg-rose-400/[0.035]",
-  gold: "border-amber-300/20 bg-amber-400/[0.035]",
-  violet: "border-violet-300/24 bg-violet-400/[0.045]",
+  green: "border-emerald-300/20 bg-emerald-400/[0.055]",
+  cyan: "border-sky-300/20 bg-sky-400/[0.06]",
+  coral: "border-rose-300/20 bg-rose-400/[0.055]",
+  gold: "border-amber-300/25 bg-[var(--primary-soft)]",
+  violet: "border-violet-300/24 bg-violet-400/[0.06]",
 };
 
 const iconTones = {
@@ -32,7 +32,7 @@ const iconTones = {
 export function StatCard({ label, value, helper, tone = "green", icon }: StatCardProps) {
   return (
     <motion.article
-      className={cn("card min-w-0 p-4 transition duration-200 hover:-translate-y-0.5", tones[tone])}
+      className={cn("card min-w-0 overflow-hidden p-4 transition duration-200 hover:-translate-y-0.5", tones[tone])}
       initial={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.28, ease: "easeOut" }}
       viewport={{ once: true, margin: "-40px" }}
@@ -41,7 +41,7 @@ export function StatCard({ label, value, helper, tone = "green", icon }: StatCar
       <div className="flex min-w-0 items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase text-[var(--muted)]">{label}</p>
-          <p className="mt-2 break-words text-3xl font-black tracking-tight text-[var(--text)]">{value}</p>
+          <p className="mt-2 break-words text-3xl font-black tracking-normal text-[var(--text)]">{value}</p>
         </div>
         {icon ? (
           <span className={cn("grid h-10 w-10 place-items-center rounded-lg", iconTones[tone])}>

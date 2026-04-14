@@ -12,12 +12,12 @@ export function PageHeader({ eyebrow, title, description, action }: PageHeaderPr
     <header className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0 space-y-2">
         {eyebrow ? (
-          <p className="text-xs font-semibold uppercase tracking-normal text-violet-200">
+          <p className="text-xs font-semibold uppercase tracking-normal text-[var(--primary)]">
             {eyebrow}
           </p>
         ) : null}
         <div className="space-y-1">
-          <h1 className="break-words text-2xl font-black tracking-tight text-[var(--text)] sm:text-3xl">
+          <h1 className="break-words text-2xl font-black tracking-normal text-[var(--text)] sm:text-3xl">
             {title}
           </h1>
           {description ? (

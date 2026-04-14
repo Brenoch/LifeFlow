@@ -2,23 +2,28 @@
 
 :root {
   color-scheme: dark;
-  --background: #0f1117;
-  --surface: #151821;
-  --surface-strong: #1b2030;
-  --surface-soft: #11141c;
-  --border: rgba(148, 163, 184, 0.18);
-  --border-strong: rgba(148, 163, 184, 0.28);
-  --text: #f7f8ff;
-  --muted: #a8b0c3;
-  --quiet: #737c91;
-  --primary: #8b5cf6;
-  --primary-strong: #7c3aed;
-  --primary-soft: rgba(139, 92, 246, 0.16);
-  --success: #34d399;
-  --warning: #fbbf24;
-  --error: #fb7185;
-  --info: #38bdf8;
-  --shadow-card: 0 18px 60px rgba(0, 0, 0, 0.28);
+  --background: #2f3339;
+  --surface: #17191d;
+  --surface-strong: #f6f6ef;
+  --surface-soft: #202329;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --text: #f8f8f2;
+  --text-inverse: #17191d;
+  --muted: #b9bec8;
+  --quiet: #838a96;
+  --primary: #f4ef5f;
+  --primary-strong: #fff36f;
+  --primary-soft: rgba(244, 239, 95, 0.18);
+  --accent: #8f63ff;
+  --accent-strong: #c837ff;
+  --success: #6ee7a8;
+  --warning: #f4ef5f;
+  --error: #ff6b8a;
+  --info: #43dce7;
+  --paper: #f7f7f2;
+  --paper-muted: #dfe3eb;
+  --shadow-card: 0 24px 70px rgba(0, 0, 0, 0.26);
 }
 
 * {
@@ -39,8 +44,9 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    linear-gradient(140deg, rgba(139, 92, 246, 0.1), transparent 320px),
-    linear-gradient(180deg, rgba(56, 189, 248, 0.04), transparent 420px),
+    linear-gradient(135deg, rgba(244, 239, 95, 0.1), transparent 360px),
+    linear-gradient(165deg, transparent 0 42%, rgba(67, 220, 231, 0.08) 42% 58%, transparent 58%),
+    linear-gradient(40deg, rgba(143, 99, 255, 0.12), transparent 460px),
     var(--background);
   color: var(--text);
   font-family:
@@ -60,7 +66,7 @@ button {
 
 ::selection {
   background: var(--primary);
-  color: white;
+  color: var(--text-inverse);
 }
 
 .card {
@@ -68,15 +74,22 @@ button {
   border: 1px solid var(--border);
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 42%),
-    color-mix(in srgb, var(--surface) 94%, black);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 42%),
+    color-mix(in srgb, var(--surface) 92%, black);
   box-shadow: var(--shadow-card);
+}
+
+.card-light {
+  border: 1px solid rgba(23, 25, 29, 0.1);
+  background: var(--paper);
+  color: var(--text-inverse);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
 }
 
 .glass-panel {
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(21, 24, 33, 0.82);
+  background: rgba(23, 25, 29, 0.84);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(18px);
 }
@@ -86,7 +99,7 @@ button {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--surface-soft);
+  background: rgba(11, 12, 14, 0.28);
   padding: 0.75rem 0.9rem;
   color: var(--text);
   outline: none;
@@ -97,9 +110,9 @@ button {
 }
 
 .input:focus {
-  border-color: rgba(139, 92, 246, 0.72);
-  background: #121622;
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16);
+  border-color: rgba(244, 239, 95, 0.72);
+  background: rgba(11, 12, 14, 0.42);
+  box-shadow: 0 0 0 4px rgba(244, 239, 95, 0.16);
 }
 
 .chip {
@@ -121,5 +134,60 @@ button {
 }
 
 .premium-focus:focus-visible {
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.22);
+  box-shadow: 0 0 0 4px rgba(244, 239, 95, 0.24);
+}
+
+.tracking-tight {
+  letter-spacing: 0 !important;
+}
+
+.habit-thread {
+  position: relative;
+  min-height: 118px;
+  overflow: hidden;
+}
+
+.habit-thread::before {
+  content: "";
+  position: absolute;
+  inset: 18px -28px auto -28px;
+  height: 92px;
+  border-top: 1px solid rgba(248, 248, 242, 0.52);
+  border-radius: 55% 45% 45% 55%;
+  transform: rotate(7deg);
+}
+
+.habit-thread::after {
+  content: "";
+  position: absolute;
+  left: 44%;
+  top: 42px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(248, 248, 242, 0.72);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at center, var(--paper) 0 7px, transparent 8px),
+    rgba(255, 255, 255, 0.02);
+}
+
+.timeline-dot {
+  min-height: 34px;
+  min-width: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(23, 25, 29, 0.08);
+  background: #edf0f6;
+  color: #17191d;
+}
+
+.timeline-dot.is-active {
+  background: #17191d;
+  color: var(--paper);
+}
+
+.quiet-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
 }

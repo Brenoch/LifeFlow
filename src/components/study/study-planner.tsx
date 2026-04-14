@@ -153,7 +153,7 @@ export function StudyPlanner() {
           </div>
 
           {suggestedTopic ? (
-            <div className="rounded-lg border border-violet-300/20 bg-violet-400/10 p-4">
+            <div className="rounded-lg border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] bg-[var(--primary-soft)] p-4">
               <p className="text-2xl font-bold">{suggestedTopic.title}</p>
               <p className="mt-2 text-sm text-[#aeb7c2]">
                 {suggestedTopic.estimatedMinutes} min ·{" "}

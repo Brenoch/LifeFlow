@@ -66,9 +66,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--text)]">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-[var(--border)] bg-[#11141d]/92 px-5 py-6 backdrop-blur-xl xl:flex xl:flex-col">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-[var(--border)] bg-[#151619]/95 px-5 py-6 backdrop-blur-xl xl:flex xl:flex-col">
         <Link className="flex min-w-0 items-center gap-3" href="/">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-white shadow-[0_14px_34px_rgba(139,92,246,0.28)]">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-[var(--text-inverse)] shadow-[0_14px_34px_rgba(244,239,95,0.18)]">
             LF
           </span>
           <span className="min-w-0">
@@ -90,7 +90,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className={cn(
                   "group flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-semibold transition",
                   isActive
-                    ? "border-violet-300/24 bg-violet-400/14 text-white"
+                    ? "border-[color-mix(in_srgb,var(--primary)_40%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]"
                     : "border-transparent text-[var(--muted)] hover:border-[var(--border)] hover:bg-white/[0.05] hover:text-white",
                 )}
                 href={item.href}
@@ -106,14 +106,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mt-auto space-y-4">
           <div className="card p-4">
             <div className="mb-3 flex items-center justify-between">
-              <Badge tone="violet">Nível {levelInfo.level}</Badge>
-              <Trophy className="h-4 w-4 text-violet-200" />
+              <Badge tone="warning">Nível {levelInfo.level}</Badge>
+              <Trophy className="h-4 w-4 text-[var(--primary)]" />
             </div>
             <p className="truncate text-sm font-bold">{data.profile.name}</p>
             <p className="mt-1 text-xs text-[var(--muted)]">{data.profile.xp} XP acumulados</p>
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white/[0.035] px-3 py-2 text-xs text-[var(--muted)]">
-            <Flame className="h-4 w-4 text-amber-200" />
+          <div className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white/[0.045] px-3 py-2 text-xs text-[var(--muted)]">
+            <Flame className="h-4 w-4 text-[var(--primary)]" />
             Sequência atual em foco
           </div>
         </div>
@@ -123,7 +123,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 pb-24 pt-5 sm:px-6 lg:px-8 lg:pt-8 xl:pb-10">
           <header className="mb-6 flex items-center justify-between gap-4 xl:hidden">
           <Link className="flex min-w-0 items-center gap-3" href="/">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-white">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-sm font-black text-[var(--text-inverse)]">
               LF
             </span>
             <span className="min-w-0">
@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[#11141d]/95 px-2 py-2 backdrop-blur-xl xl:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[#151619]/95 px-2 py-2 backdrop-blur-xl xl:hidden">
         <div className="grid grid-cols-5 gap-1">
           {navItems.map((item) => {
             const Icon = navIcons[item.href as keyof typeof navIcons];
@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg px-2 text-center text-[11px] font-bold transition",
                   isActive
-                    ? "bg-[var(--primary)] text-white"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)]"
                     : "text-[var(--muted)] hover:bg-white/[0.06] hover:text-white",
                 )}
                 href={item.href}

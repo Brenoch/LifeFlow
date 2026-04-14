@@ -100,7 +100,7 @@ export function PomodoroScreen() {
       <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <article className="card p-5 sm:p-6">
           <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-            <div className="grid aspect-square w-full max-w-[280px] place-items-center rounded-lg border border-violet-300/20 bg-violet-400/10">
+            <div className="grid aspect-square w-full max-w-[280px] place-items-center rounded-lg border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] bg-[var(--primary-soft)]">
               <div>
                 <p className="text-6xl font-black tabular-nums">{formatSeconds(secondsLeft)}</p>
                 <p className="mt-2 text-sm text-[#aeb7c2]">
@@ -174,7 +174,7 @@ export function PomodoroScreen() {
             <div className="grid grid-cols-4 gap-2">
               {durationOptions.map((minutes) => (
                 <button
-                  className={`chip ${durationMinutes === minutes ? "border-violet-300/40 bg-violet-400/14 text-violet-100" : ""}`}
+                  className={`chip ${durationMinutes === minutes ? "border-[color-mix(in_srgb,var(--primary)_40%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]" : ""}`}
                   disabled={isRunning}
                   key={minutes}
                   onClick={() => updateDuration(minutes)}

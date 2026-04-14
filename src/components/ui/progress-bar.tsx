@@ -14,7 +14,7 @@ const tones = {
   green: "bg-[var(--success)]",
   cyan: "bg-[var(--info)]",
   coral: "bg-[var(--error)]",
-  violet: "bg-[var(--primary)]",
+  violet: "bg-[var(--accent)]",
   gold: "bg-[var(--warning)]",
 };
 
@@ -24,12 +24,12 @@ export function ProgressBar({ value, label, tone = "green" }: ProgressBarProps) 
   return (
     <div className="space-y-2">
       {label ? (
-        <div className="flex items-center justify-between text-xs text-[#aeb7c2]">
+        <div className="flex items-center justify-between text-xs text-[var(--muted)]">
           <span>{label}</span>
           <span>{safeValue}%</span>
         </div>
       ) : null}
-      <div className="h-2.5 overflow-hidden rounded-lg bg-white/[0.07]">
+      <div className="h-2.5 overflow-hidden rounded-lg bg-white/[0.08]">
         <motion.div
           animate={{ width: `${safeValue}%` }}
           className={cn("h-full rounded-lg", tones[tone])}
