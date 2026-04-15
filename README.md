@@ -166,3 +166,5 @@ NEXT_PUBLIC_FIREBASE_APP_ID
 Depois faça um novo push para `main`. O workflow vai gerar o site com Firebase Auth e Firestore ativos.
 
 No Firebase Console, adicione `brenoch.github.io` em `Authentication > Settings > Authorized domains` e publique as regras em `firebase/firestore.rules`.
+
+Link para testar o projeto: https://brenoch.github.io/LifeFlow/
