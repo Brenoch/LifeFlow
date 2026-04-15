@@ -1,5 +1,5 @@
-import { PremiumDashboard } from "@/components/dashboard/premium-dashboard";
+import { LifeFlowDashboard } from "@/components/dashboard/lifeflow-dashboard";
 
 export default function HomePage() {
-  return <PremiumDashboard />;
+  return <LifeFlowDashboard />;
 }

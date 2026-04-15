@@ -39,7 +39,7 @@ export function Tabs<T extends string>({
           <button
             className={cn(
               "premium-focus relative min-h-10 min-w-0 rounded-lg px-2 text-xs font-bold text-[var(--muted)] transition sm:px-3 sm:text-sm",
-              active && "text-white",
+              active && "text-[var(--text-inverse)]",
             )}
             key={option.value}
             onClick={() => onValueChange(option.value)}
@@ -47,7 +47,7 @@ export function Tabs<T extends string>({
           >
             {active ? (
               <motion.span
-                className="absolute inset-0 rounded-lg bg-[var(--primary)] shadow-[0_10px_28px_rgba(139,92,246,0.24)]"
+                className="absolute inset-0 rounded-lg bg-[var(--primary)] shadow-[0_10px_28px_rgba(244,239,95,0.2)]"
                 layoutId="lifeflow-active-tab"
                 transition={{ duration: 0.22, ease: "easeOut" }}
               />

@@ -4,9 +4,24 @@ export const activityLabels: Record<ActivityType, string> = {
   gym: "Academia",
   martial_arts: "Artes marciais",
   running: "Corrida",
-  sports: "Esportes",
+  sports: "Esporte",
   study: "Estudo",
+  reading: "Leitura",
+  sleep: "Sono",
+  water: "Água",
   custom: "Personalizada",
+};
+
+export const activityShortLabels: Record<ActivityType, string> = {
+  gym: "Treino",
+  martial_arts: "Luta",
+  running: "Run",
+  sports: "Sport",
+  study: "Estudo",
+  reading: "Livro",
+  sleep: "Sono",
+  water: "Água",
+  custom: "Extra",
 };
 
 export const difficultyLabels: Record<Difficulty, string> = {

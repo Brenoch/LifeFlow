@@ -4,6 +4,9 @@ export type ActivityType =
   | "running"
   | "sports"
   | "study"
+  | "reading"
+  | "sleep"
+  | "water"
   | "custom";
 
 export type Difficulty = "easy" | "medium" | "hard";
@@ -15,7 +18,10 @@ export interface UserProfile {
   name: string;
   email: string;
   xp: number;
+  level: number;
+  streak: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface RoutineItem {
@@ -24,6 +30,7 @@ export interface RoutineItem {
   title: string;
   type: ActivityType;
   weekdays: number[];
+  time?: string;
   active: boolean;
   createdAt: string;
 }
@@ -35,8 +42,10 @@ export interface ActivityLog {
   type: ActivityType;
   title: string;
   date: string;
+  weekday: number;
   completed: boolean;
   completedAt?: string;
+  xpValue: number;
   xpAwarded: number;
 }
 
@@ -57,6 +66,7 @@ export interface PomodoroSession {
   topicTitle: string;
   durationMinutes: number;
   completedAt: string;
+  xpEarned: number;
 }
 
 export interface LifeFlowData {

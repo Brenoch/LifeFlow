@@ -6,12 +6,17 @@ function id(prefix: string) {
 }
 
 export function createProfile(name: string, email: string, idOverride?: string): UserProfile {
+  const now = new Date().toISOString();
+
   return {
     id: idOverride ?? id("user"),
     name,
     email,
     xp: 0,
-    createdAt: new Date().toISOString(),
+    level: 1,
+    streak: 0,
+    createdAt: now,
+    updatedAt: now,
   };
 }
 
@@ -25,6 +30,7 @@ export function createDefaultData(profile: UserProfile): LifeFlowData {
       title: "Treino de força",
       type: "gym",
       weekdays: [1, 3, 5],
+      time: "07:00",
       active: true,
       createdAt,
     },
@@ -34,6 +40,7 @@ export function createDefaultData(profile: UserProfile): LifeFlowData {
       title: "Aula de artes marciais",
       type: "martial_arts",
       weekdays: [2, 4],
+      time: "19:30",
       active: true,
       createdAt,
     },
@@ -43,6 +50,7 @@ export function createDefaultData(profile: UserProfile): LifeFlowData {
       title: "Corrida leve",
       type: "running",
       weekdays: [6],
+      time: "08:00",
       active: true,
       createdAt,
     },
@@ -52,6 +60,26 @@ export function createDefaultData(profile: UserProfile): LifeFlowData {
       title: "Bloco de estudo focado",
       type: "study",
       weekdays: [1, 2, 3, 4, 5],
+      time: "20:00",
+      active: true,
+      createdAt,
+    },
+    {
+      id: id("routine"),
+      userId: profile.id,
+      title: "Leitura curta",
+      type: "reading",
+      weekdays: [0, 2, 4],
+      time: "22:00",
+      active: true,
+      createdAt,
+    },
+    {
+      id: id("routine"),
+      userId: profile.id,
+      title: "Água e sono",
+      type: "water",
+      weekdays: [0, 1, 2, 3, 4, 5, 6],
       active: true,
       createdAt,
     },

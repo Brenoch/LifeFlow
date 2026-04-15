@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { PomodoroTimer } from "@/components/pomodoro/pomodoro-timer";
 import { PageHeader } from "@/components/ui/page-header";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatCard } from "@/components/ui/stat-card";
 import { formatRelativeStudyDate } from "@/lib/date";
 import { difficultyLabels } from "@/lib/labels";
@@ -66,10 +65,6 @@ export function PomodoroScreen() {
     (total, session) => total + session.durationMinutes,
     0,
   );
-  const progress = Math.round(
-    ((durationMinutes * 60 - secondsLeft) / (durationMinutes * 60)) * 100,
-  );
-
   function updateDuration(minutes: number) {
     setDurationMinutes(minutes);
 
@@ -98,42 +93,16 @@ export function PomodoroScreen() {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
-        <article className="card p-5 sm:p-6">
-          <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-            <div className="grid aspect-square w-full max-w-[280px] place-items-center rounded-lg border border-[color-mix(in_srgb,var(--primary)_30%,transparent)] bg-[var(--primary-soft)]">
-              <div>
-                <p className="text-6xl font-black tabular-nums">{formatSeconds(secondsLeft)}</p>
-                <p className="mt-2 text-sm text-[#aeb7c2]">
-                  {selectedTopic ? selectedTopic.title : "Selecione um tópico"}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 w-full">
-              <ProgressBar label="Progresso da sessão" tone="cyan" value={progress} />
-            </div>
-
-            <div className="mt-5 grid w-full grid-cols-2 gap-2">
-              <Button
-                disabled={!selectedTopic}
-                onClick={() => setIsRunning((current) => !current)}
-              >
-                {isRunning ? "Pausar" : "Iniciar"}
-              </Button>
-              <Button onClick={resetTimer} variant="secondary">
-                Reiniciar
-              </Button>
-              <Button
-                className="col-span-2"
-                disabled={!selectedTopic}
-                onClick={finishSession}
-                variant="secondary"
-              >
-                Concluir agora
-              </Button>
-            </div>
-          </div>
-        </article>
+        <PomodoroTimer
+          disabled={!selectedTopic}
+          durationMinutes={durationMinutes}
+          isRunning={isRunning}
+          onFinish={finishSession}
+          onReset={resetTimer}
+          onToggle={() => setIsRunning((current) => !current)}
+          secondsLeft={secondsLeft}
+          topicTitle={selectedTopic?.title}
+        />
 
         <aside className="space-y-4">
           <article className="card p-4 sm:p-5">
@@ -209,11 +178,4 @@ export function PomodoroScreen() {
       </section>
     </div>
   );
-}
-
-function formatSeconds(totalSeconds: number) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }

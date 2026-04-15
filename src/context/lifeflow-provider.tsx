@@ -29,7 +29,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { toDateKey } from "@/lib/date";
+import { fromDateKey, toDateKey } from "@/lib/date";
 import { createDefaultData, createProfile, makeActivityId, makeId } from "@/lib/default-data";
 import { firebaseAuth, firebaseDb, googleProvider, isFirebaseConfigured } from "@/lib/firebase";
 import {
@@ -63,6 +63,7 @@ interface RoutineInput {
   title: string;
   type: ActivityType;
   weekdays: number[];
+  time?: string;
 }
 
 interface StudyTopicInput {
@@ -234,7 +235,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const nextData = updater(current);
+      const nextData = withProfileStats(updater(current));
       dataRef.current = nextData;
       setData(nextData);
       void persistData(nextData);
@@ -358,6 +359,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
             title: input.title,
             type: input.type,
             weekdays: input.weekdays.length > 0 ? input.weekdays : [new Date().getDay()],
+            time: input.time,
             active: true,
             createdAt: new Date().toISOString(),
           },
@@ -395,6 +397,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
         );
         const xpAwarded = completed ? getActivityXp(item.type) : 0;
         const xpDelta = xpAwarded - (existingActivity?.xpAwarded ?? 0);
+        const weekday = fromDateKey(dateKey).getDay();
         const nextActivity: ActivityLog = {
           id: existingActivity?.id ?? makeActivityId(routineItemId, dateKey),
           userId: current.profile.id,
@@ -402,7 +405,9 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
           type: item.type,
           title: item.title,
           date: dateKey,
+          weekday,
           completed,
+          xpValue: getActivityXp(item.type),
           xpAwarded,
           ...(completed ? { completedAt: new Date().toISOString() } : {}),
         };
@@ -498,6 +503,7 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
               topicTitle: topic.title,
               durationMinutes,
               completedAt,
+              xpEarned: 15,
             },
           ],
         };
@@ -557,6 +563,20 @@ export function LifeFlowProvider({ children }: { children: ReactNode }) {
 
 function localUserId(email: string) {
   return `local-${email.trim().toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
+}
+
+function withProfileStats(data: LifeFlowData): LifeFlowData {
+  const levelInfo = getLevelInfo(data.profile.xp);
+
+  return {
+    ...data,
+    profile: {
+      ...data.profile,
+      level: levelInfo.level,
+      streak: calculateCurrentStreak(data),
+      updatedAt: new Date().toISOString(),
+    },
+  };
 }
 
 function createRemoteProfile(user: User, preferredName?: string) {

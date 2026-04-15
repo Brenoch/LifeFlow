@@ -3,23 +3,16 @@
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { CalendarGrid } from "@/components/calendar/calendar-grid";
 import { PageHeader } from "@/components/ui/page-header";
-import { formatMonthTitle, formatShortDate, getMonthGrid, toDateKey, weekdayShortLabels } from "@/lib/date";
+import { formatMonthTitle, formatShortDate, getMonthGrid, toDateKey } from "@/lib/date";
 import { activityLabels, statusLabels } from "@/lib/labels";
 import {
   getActivityForRoutine,
   getDailySummary,
   getScheduledItemsForDate,
 } from "@/lib/smart-logic";
-import { cn } from "@/lib/cn";
 import { useLifeFlow } from "@/hooks/use-lifeflow";
-
-const statusClasses = {
-  complete: "border-emerald-300/25 bg-emerald-400/14 text-emerald-100",
-  partial: "border-[color-mix(in_srgb,var(--primary)_35%,transparent)] bg-[var(--primary-soft)] text-[var(--primary)]",
-  missed: "border-rose-300/25 bg-rose-400/12 text-rose-100",
-  rest: "border-[var(--border)] bg-white/[0.04] text-[var(--quiet)]",
-};
 
 export function CalendarView() {
   const { data, setActivityStatus, streak } = useLifeFlow();
@@ -62,41 +55,13 @@ export function CalendarView() {
             </Button>
           </div>
 
-          <div className="mb-2 grid grid-cols-7 gap-2 text-center text-xs font-bold text-[#aeb7c2]">
-            {weekdayShortLabels.map((day) => (
-              <span key={day}>{day}</span>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((date) => {
-              const dateKey = toDateKey(date);
-              const summary = getDailySummary(data, dateKey);
-              const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
-              const isSelected = dateKey === selectedDate;
-
-              return (
-                <button
-                  className={cn(
-                    "aspect-square rounded-lg border p-1 text-left text-xs transition hover:-translate-y-0.5",
-                    statusClasses[summary.status],
-                    !isCurrentMonth && "opacity-40",
-                    isSelected && "ring-2 ring-[var(--primary)]",
-                  )}
-                  key={dateKey}
-                  onClick={() => setSelectedDate(dateKey)}
-                  type="button"
-                >
-                  <span className="block font-bold">{date.getDate()}</span>
-                  <span className="mt-1 block text-[10px]">
-                    {summary.scheduled === 0
-                      ? "Descanso"
-                      : `${summary.completed}/${summary.scheduled}`}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <CalendarGrid
+            currentMonth={currentMonth}
+            data={data}
+            days={days}
+            onSelectDate={setSelectedDate}
+            selectedDate={selectedDate}
+          />
         </article>
 
         <aside className="card p-4 sm:p-5">

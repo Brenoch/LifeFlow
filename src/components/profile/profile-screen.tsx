@@ -3,11 +3,13 @@
 import { FormEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { BadgeCard } from "@/components/dashboard/badge-card";
+import { FirebaseStatusCard } from "@/components/profile/firebase-status-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatCard } from "@/components/ui/stat-card";
 import { weekdayShortLabels } from "@/lib/date";
-import { activityLabels, storageModeLabels } from "@/lib/labels";
+import { activityLabels } from "@/lib/labels";
 import { cn } from "@/lib/cn";
 import { useLifeFlow } from "@/hooks/use-lifeflow";
 
@@ -73,23 +75,12 @@ export function ProfileScreen() {
             </Button>
           </form>
 
-          <div className="mt-5 space-y-3 rounded-lg border border-[var(--border)] bg-white/[0.03] p-3">
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <span className="text-[#aeb7c2]">Armazenamento</span>
-              <span className="font-semibold">{storageModeLabels[storageMode]}</span>
-            </div>
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <span className="text-[#aeb7c2]">Configuração do Firebase</span>
-              <span className={cn("font-semibold", isFirebaseEnabled ? "text-emerald-200" : "text-amber-200")}>
-                {isFirebaseEnabled ? "Ativa" : "Variáveis ausentes"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <span className="text-[#aeb7c2]">Sincronização</span>
-              <span className={cn("text-right font-semibold", syncError ? "text-rose-200" : "text-emerald-200")}>
-                {syncError ?? (storageMode === "firebase" ? "Firestore ativo" : "Somente neste navegador")}
-              </span>
-            </div>
+          <div className="mt-5">
+            <FirebaseStatusCard
+              isFirebaseEnabled={isFirebaseEnabled}
+              storageMode={storageMode}
+              syncError={syncError}
+            />
           </div>
 
           <Button className="mt-5 w-full" onClick={logout} variant="danger">
@@ -108,18 +99,7 @@ export function ProfileScreen() {
             <h2 className="mb-3 text-lg font-bold">Conquistas</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {badges.map((badge) => (
-                <div
-                  className={cn(
-                    "rounded-lg border p-3",
-                    badge.earned
-                      ? "border-[color-mix(in_srgb,var(--primary)_35%,transparent)] bg-[var(--primary-soft)] text-[var(--text)]"
-                      : "border-[var(--border)] bg-white/[0.03] text-[var(--muted)]",
-                  )}
-                  key={badge.id}
-                >
-                  <p className="font-semibold">{badge.title}</p>
-                  <p className="mt-1 text-xs">{badge.description}</p>
-                </div>
+                <BadgeCard badge={badge} key={badge.id} />
               ))}
             </div>
           </div>

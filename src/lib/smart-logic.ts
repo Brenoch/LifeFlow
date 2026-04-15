@@ -16,7 +16,7 @@ const difficultyWeight: Record<Difficulty, number> = {
 };
 
 export function getActivityXp(type: RoutineItem["type"]) {
-  return type === "study" ? 15 : 10;
+  return type === "study" || type === "reading" ? 15 : 10;
 }
 
 export function getLevelInfo(xp: number) {
@@ -108,6 +108,13 @@ export function getWeeklyProgress(data: LifeFlowData, fromDate = new Date()) {
   });
 }
 
+export function getThirtyDayProgress(data: LifeFlowData, fromDate = new Date()) {
+  return Array.from({ length: 30 }, (_, index) => {
+    const date = addDays(fromDate, index - 29);
+    return getDailySummary(data, toDateKey(date));
+  });
+}
+
 export function suggestStudyTopic(data: LifeFlowData) {
   if (data.studyTopics.length === 0) {
     return undefined;
@@ -131,18 +138,32 @@ function topicScore(topic: StudyTopic, now: number, lighterDay: boolean) {
     : 12;
   const lighterBonus =
     lighterDay && topic.estimatedMinutes <= 35 && topic.difficulty !== "hard" ? 4 : 0;
+  const hardDormantBonus = topic.difficulty === "hard" && daysSinceStudy >= 5 ? 3 : 0;
   const longSessionPenalty = topic.estimatedMinutes / 90;
 
-  return daysSinceStudy * difficultyWeight[topic.difficulty] + lighterBonus - longSessionPenalty;
+  return (
+    daysSinceStudy * difficultyWeight[topic.difficulty] +
+    lighterBonus +
+    hardDormantBonus -
+    longSessionPenalty
+  );
 }
 
 export function getBadges(data: LifeFlowData): Badge[] {
   const streak = calculateCurrentStreak(data);
+  const weeklyProgress = getWeeklyProgress(data);
   const completedWorkouts = data.activities.filter(
-    (activity) => activity.completed && activity.type !== "study",
+    (activity) => activity.completed && activity.type !== "study" && activity.type !== "reading",
   );
   const completedStudy = data.pomodoroSessions.length > 0 || data.activities.some(
-    (activity) => activity.completed && activity.type === "study",
+    (activity) => activity.completed && (activity.type === "study" || activity.type === "reading"),
+  );
+  const scheduledWeek = weeklyProgress.filter((day) => day.scheduled > 0);
+  const perfectWeek =
+    scheduledWeek.length > 0 && scheduledWeek.every((day) => day.status === "complete");
+  const totalFocusMinutes = data.pomodoroSessions.reduce(
+    (total, session) => total + session.durationMinutes,
+    0,
   );
 
   return [
@@ -154,9 +175,15 @@ export function getBadges(data: LifeFlowData): Badge[] {
     },
     {
       id: "first-study",
-      title: "Primeira sessão de estudo",
+      title: "Primeiro estudo",
       description: "Finalize um Pomodoro ou uma tarefa de estudo.",
       earned: completedStudy,
+    },
+    {
+      id: "first-pomodoro",
+      title: "Primeiro Pomodoro",
+      description: "Conclua uma sessão de foco.",
+      earned: data.pomodoroSessions.length > 0,
     },
     {
       id: "streak-7",
@@ -169,6 +196,18 @@ export function getBadges(data: LifeFlowData): Badge[] {
       title: "Sequência de 30 dias",
       description: "Conclua todos os dias agendados por um mês.",
       earned: streak >= 30,
+    },
+    {
+      id: "perfect-week",
+      title: "Semana perfeita",
+      description: "Feche todos os dias planejados.",
+      earned: perfectWeek,
+    },
+    {
+      id: "deep-focus",
+      title: "Foco total",
+      description: "Acumule 300 minutos de estudo.",
+      earned: totalFocusMinutes >= 300,
     },
   ];
 }
@@ -186,6 +225,9 @@ export function getWeeklyWorkoutCount(data: LifeFlowData) {
 
   return data.activities.filter(
     (activity) =>
-      activity.completed && activity.type !== "study" && activity.date >= weekAgo,
+      activity.completed &&
+      activity.type !== "study" &&
+      activity.type !== "reading" &&
+      activity.date >= weekAgo,
   ).length;
 }
